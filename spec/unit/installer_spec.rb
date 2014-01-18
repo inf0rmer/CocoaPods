@@ -52,6 +52,7 @@ module Pod
         @installer.stubs(:download_dependencies)
         @installer.stubs(:generate_pods_project)
         @installer.stubs(:integrate_user_project)
+        @installer.stubs(:run_plugins_post_install_hooks)
         @installer.stubs(:perform_post_install_actions)
       end
 
@@ -473,6 +474,24 @@ module Pod
         @installer.send(:integrate_user_project)
       end
 
+    end
+
+    describe "Plugins Hooks" do
+      before do
+        @installer.send(:analyze)
+        @specs = @installer.pod_targets.map(&:specs).flatten
+        @spec = @specs.find { |spec| spec && spec.name == 'JSONKit' }
+        @installer.stubs(:installed_specs).returns(@specs)
+      end
+
+      it "runs plugins post install hook" do
+        options = {
+          :user_targets => [],
+          :sandbox_root => config.sandbox.root.to_s
+        }
+        Plugins.expects(:run).with(:post_install, options)
+        @installer.send(:run_plugins_post_install_hooks)
+      end
     end
 
     #-------------------------------------------------------------------------#

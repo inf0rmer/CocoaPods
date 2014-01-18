@@ -91,6 +91,7 @@ module Pod
       generate_pods_project
       integrate_user_project if config.integrate_targets?
       perform_post_install_actions
+      run_plugins_post_install_hooks
     end
 
     def resolve_dependencies
@@ -481,6 +482,23 @@ module Pod
         integrator = UserProjectIntegrator.new(podfile, sandbox, installation_root, aggregate_targets)
         integrator.integrate!
       end
+    end
+
+    # Runs the registered callbacks for the plugins post install hooks.
+    #
+    def run_plugins_post_install_hooks
+      user_targets = []
+      aggregate_targets.each do |aggregate_target|
+        unless aggregate_target.specs.empty?
+          user_targets.concat(aggregate_target.user_target_descriptions)
+        end
+      end
+
+      options = {
+        :user_targets => user_targets,
+        :sandbox_root => sandbox.root.to_s,
+      }
+      Plugins.run(:post_install, options)
     end
 
     #-------------------------------------------------------------------------#
