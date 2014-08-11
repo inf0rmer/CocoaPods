@@ -49,8 +49,6 @@ module Pod
 
       end
 
-      private
-
       def updates
         @updates ||= begin
           spec_sets.map do |set|
@@ -66,6 +64,8 @@ module Pod
           end.compact.uniq
         end
       end
+
+      private
 
       def deprecated_pods
         @deprecated_pods ||= begin
@@ -101,5 +101,3 @@ module Pod
     end
   end
 end
-
-
