@@ -40,6 +40,7 @@ module Pod
   autoload :Executable,                'cocoapods/executable'
   autoload :ExternalSources,           'cocoapods/external_sources'
   autoload :Installer,                 'cocoapods/installer'
+  autoload :Plugins,                   'cocoapods/plugins'
   autoload :PodTarget,                 'cocoapods/target/pod_target'
   autoload :Project,                   'cocoapods/project'
   autoload :Resolver,                  'cocoapods/resolver'
